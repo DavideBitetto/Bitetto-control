@@ -1,0 +1,12 @@
+<library path = "lib/libmy_controller_lib">
+	<class name="my_controller/PdController" 
+	 	type="my_controller_ns::PdController" 
+	 	base_class_type="controller_interface::ControllerBase">
+	</class>
+	<class name="my_controller/Computed_Torque" 
+	 	type="my_controller_ns::Computed_Torque" 
+	 	base_class_type="controller_interface::ControllerBase">
+	</class>
+
+</library>
+

@@ -1,0 +1,19 @@
+test:
+
+  pd_controller:
+    rr_id: test
+    type: my_controller/PdController
+    joint_names: 
+         - joint_1
+         - joint_2
+    kp: 120.0
+    kv: 10.0
+    
+  ct_controller:
+    rr_id: test
+    type: my_controller/Computed_Torque
+    joint_names:
+         - joint_1
+         - joint_2
+    kp: 120.0
+    kv: 10.0

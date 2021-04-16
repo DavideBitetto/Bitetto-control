@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name = "test" xmlns:xacro = "http://www.ros.org/wiki/xacro">
+
+<!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="mass" value="1" /> 
+  <xacro:property name="width" value="0.1" /> 
+  <xacro:property name="height1" value="2" /> 
+  <xacro:property name="height2" value="1" /> 
+  <xacro:property name="height3" value="1" /> 
+ <xacro:property name="camera_link" value="0.05"/>
+
+   <gazebo reference="link_1">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+     <gazebo reference="link_2">
+    <material>Gazebo/Red</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+   <gazebo reference="link_3">
+    <material>Gazebo/White</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+
+	 <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/test</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+
+<!-- link base -->
+
+ <link name="world"/>
+
+   <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="link_1"/>
+  </joint>	
+  
+<!-- link 1-->  
+    
+ <link name = "link_1">   
+   
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 ${height1 / 2}"/>
+      <geometry>
+        <box size="${width} ${width} ${height1}"/>
+      </geometry>
+    </collision>
+    
+    
+     <visual>
+    	<origin rpy="0 0 0" xyz="0 0 ${height1 / 2}"/>
+        <geometry>
+            <box size ="${width} ${width} ${height1}"/>
+        </geometry>
+        </visual>
+    
+    
+    
+     <inertial>
+      <mass value="${mass}"/>
+      <origin rpy="0 0 0" xyz="0 0 ${height1/2}"/>
+      <inertia 
+      ixx="${mass/12 * (width * width + height1 * height1)}" ixy="0" ixz="0" 
+      iyy="${mass/12 * (width * width + height1 * height1)}" iyz="0" 
+      izz="${mass/12 * (width * width + width * width)}"/>
+    </inertial>
+    
+     </link>
+  
+   <joint name="joint_1" type="revolute">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 ${width} ${height1 -0.05}" rpy="0 0 0"/>
+    <limit effort="1000.0" lower="-6.28" upper="6.28" velocity="0.1"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  
+ 
+ <link name="link_2">
+    
+    <collision>
+      <origin xyz="0 0 ${height2/2-0.05}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height2}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${height2/2-0.05}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height2}"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${height2/2-0.05}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+	  ixx="${mass / 12.0 * (width*width + height2*height2)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0"
+	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+    </inertial>
+  </link>
+  
+  
+  <joint name="joint_2" type="revolute">
+    <parent link="link_2"/>
+    <child link="link_3"/>
+    <origin xyz="0 ${width} ${height2 - 0.05*2}" rpy="0 0 0"/>
+    <limit effort="1000.0" lower="-6.28" upper="6.28" velocity="0.1"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  
+  <link name="link_3">
+    <collision>
+      <origin xyz="0 0 ${height3/2 - 0.05}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height3}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 ${height3/2 - 0.05}" rpy="0 0 0"/>
+      <geometry>
+	<box size="${width} ${width} ${height3}"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 ${height3/2 - 0.05}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+	  ixx="${mass / 12.0 * (width*width + height3*height3)}" ixy="0.0" ixz="0.0"
+	  iyy="${mass / 12.0 * (height3*height3 + width*width)}" iyz="0.0"
+	  izz="${mass / 12.0 * (width*width + width*width)}"/>
+    </inertial>
+  </link>
+
+    <transmission name="tran_1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran_2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  
+  
+</robot>
+
+
+
