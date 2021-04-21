@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     
     double t_f = 0.05;
     double k = 0.0;
-    
+
 
     double sec = ros::Time::now().toSec();    
     double t = t_f + sec;
@@ -49,15 +49,13 @@ int main(int argc, char** argv)
         loop_rate.sleep();
         }
         
-        cout << "sono uscitooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo:   " << ros::Time::now().toSec() << endl;
+        cout << "sono uscito dal while " << ros::Time::now().toSec() << endl;
         
         k+= 0.05;
         
         sec = ros::Time::now().toSec(); 
         
         t = t_f + sec;
-
-        // This will adjust as needed per iteration
         
     
     }
